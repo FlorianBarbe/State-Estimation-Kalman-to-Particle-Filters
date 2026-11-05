@@ -193,17 +193,22 @@ python comparaison.py --help
 
 L’état est la position et la vitesse :
 
-$$
-X_k=\\begin{{pmatrix}}\\theta_k\\\\\\Omega_k\\end{{pmatrix}},\\qquad
-X_{{k+1}}=F X_k+B_d(u_k+v_k),\\qquad y_k=H X_k+w_k.
-$$
+```text
+X_k = [theta_k, Omega_k]^T
+
+X_(k+1) = F X_k + B_d (u_k + v_k)
+y_k     = H X_k + w_k
+```
 
 La discrétisation est exacte lorsque la tension est constante sur une période d’échantillonnage. Avec $a=e^{{-T_e/T}}$ :
 
-$$
-F=\\begin{{pmatrix}}1&T(1-a)\\\\0&a\\end{{pmatrix}},\\qquad
-B_d=\\begin{{pmatrix}}G[T_e-T(1-a)]\\\\G(1-a)\\end{{pmatrix}},\\qquad H=\\begin{{pmatrix}}1&0\\end{{pmatrix}}.
-$$
+```text
+    [ 1   T(1-a) ]          [ G[Te - T(1-a)] ]
+F = [            ]    B_d = [               ]    H = [1  0]
+    [ 0      a   ]          [    G(1-a)     ]
+```
+
+Ici, `theta` désigne la position angulaire et `Omega` la vitesse ; `Te` est la période d’échantillonnage.
 
 | Paramètre réel | Valeur actuelle |
 | --- | ---: |
@@ -219,7 +224,7 @@ Le codeur arrondit la position au multiple de $\\Delta\\theta=2\\pi/L$ le plus p
 
 **Dans ces expériences, `q` règle les filtres ; aucun bruit d’entrée aléatoire n’est ajouté au simulateur.** Les mesures sont issues de la quantification. Le bootstrap utilise une vraisemblance gaussienne approchée de variance `r`, pour comparer les méthodes sous la même approximation de bruit.
 
-La vitesse initiale est connue nulle. La position initiale est inconnue pour les filtres : la comparaison impose un écart de ±0,05 rad et utilise $P_{{1/0}}=\\operatorname{{diag}}(M,0)$, avec $M=(2\\pi)^2$ dans les paramètres actuels. Le premier échantillon est traité par une correction, sans prédiction préalable.
+La vitesse initiale est connue nulle. La position initiale est inconnue pour les filtres : la comparaison impose un écart de ±0,05 rad et utilise `P_(1/0) = diag(M, 0)`, avec $M=(2\\pi)^2$ dans les paramètres actuels. Le premier échantillon est traité par une correction, sans prédiction préalable.
 
 ## Résultats
 
@@ -287,6 +292,10 @@ python docs/generer_resultats.py
 ```
 
 Cette commande recalcule les scénarios, exporte les images et le CSV, relève les versions installées dans `python/requirements.txt`, puis remplace le README. Elle utilise le rendu sans fenêtre et laisse les fichiers de filtres et leurs commentaires intacts. Pour un aperçu plus rapide : `python docs/generer_resultats.py --particules 2000` ; le nombre réellement utilisé sera indiqué dans les nouveaux résultats.
+
+## Inspiration et remerciements
+
+Nous nous sommes beaucoup inspirés du dépôt [Kalman and Bayesian Filters in Python](https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python) de Roger R. Labbe Jr. pour comprendre les méthodes de filtrage et construire nos implémentations. Ses explications et exemples nous ont servi de référence pour les filtres de Kalman, l’EKF, l’UKF et le filtrage particulaire, que nous appliquons ici au modèle de moteur du TP MSTAT.
 
 ## Références
 
