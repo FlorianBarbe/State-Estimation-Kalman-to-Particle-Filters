@@ -10,31 +10,101 @@ Projet Python autour du TP MSTAT DataSIM : Kalman optimal, Kalman stationnaire, 
 
 ## Installation
 
-Les commandes suivantes sont prévues pour un terminal Linux, depuis la racine du dépôt. Python 3 et son module `venv` sont nécessaires. Si `python3 -m venv` échoue sur Ubuntu/Debian, installer le paquet `python3-venv`.
+### Préparer le projet
+
+Télécharger ou cloner ce dépôt, puis ouvrir un terminal dans sa **racine**, le dossier contenant `README.md` et `python/`. Les commandes ci-dessous partent toutes de ce dossier.
+
+Utiliser **Python 3.14**, version majeure/mineure de l’environnement ayant produit les résultats. Les versions exactes des bibliothèques sont enregistrées dans [requirements.txt](python/requirements.txt), et celles de l’environnement de référence dans [environnement.txt](docs/environnement.txt).
+
+Créer un environnement séparé pour chaque système : ne pas copier le dossier `.venv` entre Linux, Windows et macOS. Les résultats ont été exécutés sous Linux ; les procédures Windows et macOS suivent la [documentation officielle de `venv`](https://docs.python.org/3/library/venv.html), mais n’ont pas été exécutées sur ces deux systèmes.
+
+### Linux — terminal Bash
+
+Installer Python 3.14 via une distribution adaptée à ton système. Sur Ubuntu/Debian, si la création de l’environnement indique que `venv` ou `ensurepip` manque, installer le paquet `venv` correspondant à la version de Python utilisée.
 
 ```bash
-cd State-Estimation-Kalman-to-Particle-Filters
-python3 -m venv python/.venv
+python3.14 --version
+python3.14 -m venv python/.venv
 source python/.venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r python/requirements.txt
 cd python
 python comparaison.py --sans-affichage
+python comparaison.py --simulation
 ```
 
-Le dernier lancement affiche les RMSE et vérifie que les cinq filtres s’exécutent, sans ouvrir de fenêtres. Si tu es déjà à la racine du dépôt, commence directement à `python3 -m venv`.
+Si `python3` pointe déjà vers Python 3.14, il peut remplacer `python3.14` dans les deux premières commandes.
 
-Pour une session suivante, depuis la racine :
+### Windows — PowerShell
+
+Installer Python 3.14 depuis le [site officiel pour Windows](https://www.python.org/downloads/windows/), puis ouvrir un nouveau PowerShell dans la racine du dépôt. La commande `py -3.14` sélectionne cette version explicitement.
+
+```powershell
+py -3.14 --version
+py -3.14 -m venv python/.venv
+.\python\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r python/requirements.txt
+cd python
+python comparaison.py --sans-affichage
+python comparaison.py --simulation
+```
+
+Si `py` n’est pas reconnu mais que `python --version` indique Python 3.14, utiliser `python -m venv python/.venv` pour créer l’environnement.
+
+**Si PowerShell bloque `Activate.ps1`**, l’activation n’est pas indispensable. Sans changer les règles d’exécution de scripts, appeler directement le Python de l’environnement, depuis la racine :
+
+```powershell
+.\python\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\python\.venv\Scripts\python.exe -m pip install -r python/requirements.txt
+cd python
+.\.venv\Scripts\python.exe comparaison.py --sans-affichage
+.\.venv\Scripts\python.exe comparaison.py --simulation
+```
+
+Dans ce cas, pour les commandes de simulation présentées plus bas, remplacer `python` par `.\.venv\Scripts\python.exe` tant que le terminal est dans `python/`.
+
+Avec **l’invite de commandes classique (`cmd.exe`)**, l’activation depuis la racine se fait avec :
+
+```bat
+python\.venv\Scripts\activate.bat
+```
+
+### macOS — Terminal, zsh ou Bash
+
+Installer Python 3.14 avec l’[installateur officiel macOS](https://www.python.org/downloads/macos/). Il fournit Python et le support Tk pour les fenêtres Matplotlib. Ouvrir ensuite Terminal dans la racine du dépôt.
 
 ```bash
+python3.14 --version
+python3.14 -m venv python/.venv
 source python/.venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r python/requirements.txt
 cd python
-python comparaison.py
+python comparaison.py --sans-affichage
+python comparaison.py --simulation
 ```
 
-Environnement ayant servi aux résultats ci-dessous : **Python 3.14.4**, NumPy 2.5.4, SciPy 1.18.1, Matplotlib 3.11.2, FilterPy 2.0.0. Les versions sont enregistrées dans [requirements.txt](python/requirements.txt) et [environnement.txt](docs/environnement.txt). Les mêmes versions doivent disposer de distributions compatibles avec ton Python ; la référence testée est celle indiquée ici.
+Si `python3` pointe déjà vers Python 3.14, il peut remplacer `python3.14`. L’installateur officiel est disponible pour les Mac compatibles Intel et Apple Silicon ; garder le même interpréteur et la même architecture pour créer l’environnement et installer les dépendances. [Support Tk de Python sur macOS](https://www.python.org/download/mac/tcltk/).
 
-Dans VS Code, choisir `python/.venv/bin/python` comme interpréteur. Pour quitter l’environnement : `deactivate`.
+### Reprendre le projet et choisir l’interpréteur
+
+À chaque nouveau terminal, réactiver l’environnement depuis la racine :
+
+| Système / terminal | Activation |
+| --- | --- |
+| Linux ou macOS | `source python/.venv/bin/activate` |
+| Windows PowerShell | `.\python\.venv\Scripts\Activate.ps1` |
+| Windows cmd.exe | `python\.venv\Scripts\activate.bat` |
+
+Puis lancer `cd python` et `python comparaison.py`. Pour quitter l’environnement activé : `deactivate`.
+
+Dans VS Code, sélectionner **Python: Select Interpreter**, puis l’interpréteur du projet :
+
+- Linux / macOS : `python/.venv/bin/python` ;
+- Windows : `python\.venv\Scripts\python.exe`.
+
+Le lancement `--sans-affichage` affiche les RMSE sans ouvrir de fenêtres. Si l’installation d’une version épinglée échoue, vérifier la version et l’architecture de Python avant de modifier les dépendances : l’environnement de référence est enregistré dans `docs/environnement.txt`.
 
 ## Lancer les simulations
 
@@ -200,6 +270,12 @@ Depuis la racine du dépôt, avec l’environnement installé :
 ```bash
 source python/.venv/bin/activate
 python docs/generer_resultats.py
+```
+
+Sous Windows, depuis la racine, on peut aussi appeler directement l’interpréteur de l’environnement :
+
+```powershell
+.\python\.venv\Scripts\python.exe docs/generer_resultats.py
 ```
 
 Cette commande recalcule les scénarios, exporte les images et le CSV, relève les versions installées dans `python/requirements.txt`, puis remplace le README. Elle utilise le rendu sans fenêtre et laisse les fichiers de filtres et leurs commentaires intacts. Pour un aperçu plus rapide : `python docs/generer_resultats.py --particules 2000` ; le nombre réellement utilisé sera indiqué dans les nouveaux résultats.
