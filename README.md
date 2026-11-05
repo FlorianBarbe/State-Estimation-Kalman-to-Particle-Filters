@@ -149,22 +149,13 @@ python comparaison.py --help
 
 L’état est la position et la vitesse :
 
-```text
-X_k = [theta_k, Omega_k]^T
-
-X_(k+1) = F X_k + B_d (u_k + v_k)
-y_k     = H X_k + w_k
-```
+![État du moteur et équations stochastiques](docs/figures/modele_etat.png)
 
 La discrétisation est exacte lorsque la tension est constante sur une période d’échantillonnage. Avec $a=e^{-T_e/T}$ :
 
-```text
-    [ 1   T(1-a) ]          [ G[Te - T(1-a)] ]
-F = [            ]    B_d = [               ]    H = [1  0]
-    [ 0      a   ]          [    G(1-a)     ]
-```
+![Matrices discrètes exactes F, Bd et H](docs/figures/matrices_discretes.png)
 
-Ici, `theta` désigne la position angulaire et `Omega` la vitesse ; `Te` est la période d’échantillonnage.
+Les deux composantes de l’état sont la position angulaire et la vitesse de rotation ; $T_e$ est la période d’échantillonnage.
 
 | Paramètre réel | Valeur actuelle |
 | --- | ---: |

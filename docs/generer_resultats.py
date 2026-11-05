@@ -8,6 +8,60 @@ import sys
 from importlib.metadata import version
 
 
+
+def generer_equations_modele(root):
+    #Images des équations : indépendantes du moteur LaTeX du lecteur Markdown.
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    dossier = root / 'docs' / 'figures'
+    dossier.mkdir(parents=True, exist_ok=True)
+    couleur = '#172337'
+
+    def canevas(largeur, hauteur):
+        fig, ax = plt.subplots(figsize=(largeur, hauteur))
+        fig.patch.set_facecolor('#ffffff')
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.axis('off')
+        fig.subplots_adjust(left=0.02, right=0.98, bottom=0.02, top=0.98)
+        return fig, ax
+
+    def texte(ax, x, y, valeur, taille=22):
+        ax.text(x, y, valeur, ha='center', va='center', fontsize=taille, color=couleur)
+
+    def matrice(ax, gauche, droite, bas, haut, valeurs):
+        largeur = droite - gauche
+        for x, sens in ((gauche, 1), (droite, -1)):
+            ax.plot([x+sens*.015, x, x, x+sens*.015],
+                    [haut, haut, bas, bas], color=couleur, linewidth=1.6)
+        for i, ligne in enumerate(valeurs):
+            y = haut - (i+.5)*(haut-bas)/len(valeurs)
+            for j, valeur in enumerate(ligne):
+                x = gauche + (j+.5)*largeur/len(ligne)
+                texte(ax, x, y, valeur)
+
+    fig, ax = canevas(11, 2.5)
+    texte(ax, .09, .72, r'$X_k=$')
+    matrice(ax, .155, .245, .47, .94, [[r'$\theta_k$'], [r'$\Omega_k$']])
+    texte(ax, .62, .72, r'$X_{k+1}=F X_k+B_d(u_k+v_k)$')
+    texte(ax, .62, .25, r'$y_k=H X_k+w_k$')
+    fig.savefig(dossier/'modele_etat.png', dpi=220, facecolor='white')
+    plt.close(fig)
+
+    fig, ax = canevas(13, 2.2)
+    texte(ax, .035, .52, r'$F=$')
+    matrice(ax, .075, .33, .19, .86,
+            [[r'$1$', r'$T(1-a)$'], [r'$0$', r'$a$']])
+    texte(ax, .395, .52, r'$B_d=$')
+    matrice(ax, .445, .755, .19, .86,
+            [[r'$G[T_e-T(1-a)]$'], [r'$G(1-a)$']])
+    texte(ax, .815, .52, r'$H=$')
+    matrice(ax, .865, .985, .32, .72, [[r'$1$', r'$0$']])
+    fig.savefig(dossier/'matrices_discretes.png', dpi=220, facecolor='white')
+    plt.close(fig)
+
+
 def main():
     default = Path(__file__).resolve().parents[1] if Path(__file__).resolve().parent.name == 'docs' else Path('/home/florian/Desktop/State-Estimation-Kalman-to-Particle-Filters')
     parser = argparse.ArgumentParser(description='Génère le README, les figures et les résultats du moteur')
@@ -112,6 +166,7 @@ def main():
             table.append(f"| {row['T_filtre_s']*1000:g} ms | {row['q_V2']:g} | {row['filtre']} | {row['rmse_position_rad']:.4g} | {row['rmse_vitesse_rad_s']:.4g} |")
     figures_md='\n\n'.join(f"### T filtre = {T*1000:g} ms\n\n![Erreurs des cinq filtres avec T filtre égal à {T*1000:g} ms](docs/figures/{name})" for T,name in noms_figures)
     quantif=float(np.max(np.abs(y-x[0])))
+    generer_equations_modele(root)
     readme=f'''# State Estimation · Kalman to Particle Filters
 
 **Estimer la position et la vitesse d’un moteur à courant continu à partir de sa commande et d’un codeur angulaire.**
@@ -263,22 +318,13 @@ python comparaison.py --help
 
 L’état est la position et la vitesse :
 
-```text
-X_k = [theta_k, Omega_k]^T
-
-X_(k+1) = F X_k + B_d (u_k + v_k)
-y_k     = H X_k + w_k
-```
+![État du moteur et équations stochastiques](docs/figures/modele_etat.png)
 
 La discrétisation est exacte lorsque la tension est constante sur une période d’échantillonnage. Avec $a=e^{{-T_e/T}}$ :
 
-```text
-    [ 1   T(1-a) ]          [ G[Te - T(1-a)] ]
-F = [            ]    B_d = [               ]    H = [1  0]
-    [ 0      a   ]          [    G(1-a)     ]
-```
+![Matrices discrètes exactes F, Bd et H](docs/figures/matrices_discretes.png)
 
-Ici, `theta` désigne la position angulaire et `Omega` la vitesse ; `Te` est la période d’échantillonnage.
+Les deux composantes de l’état sont la position angulaire et la vitesse de rotation ; $T_e$ est la période d’échantillonnage.
 
 | Paramètre réel | Valeur actuelle |
 | --- | ---: |
