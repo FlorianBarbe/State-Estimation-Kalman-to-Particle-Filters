@@ -18,7 +18,9 @@ Utiliser **Python 3.14**, version majeure/mineure de l’environnement ayant pro
 
 Créer un environnement séparé pour chaque système : ne pas copier le dossier `.venv` entre Linux, Windows et macOS. Les résultats ont été exécutés sous Linux ; les procédures Windows et macOS suivent la [documentation officielle de `venv`](https://docs.python.org/3/library/venv.html), mais n’ont pas été exécutées sur ces deux systèmes.
 
-### Linux — terminal Bash
+
+<details>
+<summary> Linux — terminal Bash</summary>summary> 
 
 Installer Python 3.14 via une distribution adaptée à ton système. Sur Ubuntu/Debian, si la création de l’environnement indique que `venv` ou `ensurepip` manque, installer le paquet `venv` correspondant à la version de Python utilisée.
 
@@ -34,8 +36,9 @@ python comparaison.py --simulation
 ```
 
 Si `python3` pointe déjà vers Python 3.14, il peut remplacer `python3.14` dans les deux premières commandes.
-
-### Windows — PowerShell
+</details>
+<details>
+<summary> Windows — PowerShell</summary>
 
 Installer Python 3.14 depuis le [site officiel pour Windows](https://www.python.org/downloads/windows/), puis ouvrir un nouveau PowerShell dans la racine du dépôt. La commande `py -3.14` sélectionne cette version explicitement.
 
@@ -69,8 +72,9 @@ Avec **l’invite de commandes classique (`cmd.exe`)**, l’activation depuis la
 ```bat
 python\.venv\Scripts\activate.bat
 ```
-
-### macOS — Terminal, zsh ou Bash
+</details>
+<details>
+<summary>  macOS — Terminal, zsh ou Bash</summary>
 
 Installer Python 3.14 avec l’[installateur officiel macOS](https://www.python.org/downloads/macos/). Il fournit Python et le support Tk pour les fenêtres Matplotlib. Ouvrir ensuite Terminal dans la racine du dépôt.
 
@@ -105,6 +109,7 @@ Dans VS Code, sélectionner **Python: Select Interpreter**, puis l’interpréte
 - Windows : `python\.venv\Scripts\python.exe`.
 
 Le lancement `--sans-affichage` affiche les RMSE sans ouvrir de fenêtres. Si l’installation d’une version épinglée échoue, vérifier la version et l’architecture de Python avant de modifier les dépendances : l’environnement de référence est enregistré dans `docs/environnement.txt`.
+</details>
 
 ## Lancer les simulations
 
