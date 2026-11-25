@@ -1,6 +1,8 @@
 # State Estimation · Kalman to Particle Filters
 
-**Estimer la position et la vitesse d’un moteur à courant continu à partir de sa commande et d’un codeur angulaire.**
+**Estimation de la position et de la vitesse d’un moteur linéaire à courant continu à partir de sa commande et d’un codeur angulaire.**
+
+Comparaison de filtres de Kalman et d’un filtre particulaire, avec étude de sensibilité à une erreur de constante de temps.
 
 Projet Python autour du TP MSTAT DataSIM : Kalman optimal, Kalman stationnaire, EKF, UKF et filtre particulaire bootstrap. Les cinq méthodes sont appliquées au **même moteur**, avec les mêmes mesures et conditions initiales.
 
@@ -20,7 +22,7 @@ Créer un environnement séparé pour chaque système : ne pas copier le dossier
 
 
 <details>
-<summary> Linux — terminal Bash</summary>summary> 
+<summary>Linux — terminal Bash</summary> 
 
 Installer Python 3.14 via une distribution adaptée à ton système. Sur Ubuntu/Debian, si la création de l’environnement indique que `venv` ou `ensurepip` manque, installer le paquet `venv` correspondant à la version de Python utilisée.
 
