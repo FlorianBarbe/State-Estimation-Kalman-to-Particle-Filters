@@ -22,7 +22,7 @@ Créer un environnement séparé pour chaque système : ne pas copier le dossier
 
 
 <details>
-<summary>Linux — terminal Bash</summary> 
+<summary>Linux — terminal Bash</summary>
 
 Installer Python 3.14 via une distribution adaptée à ton système. Sur Ubuntu/Debian, si la création de l’environnement indique que `venv` ou `ensurepip` manque, installer le paquet `venv` correspondant à la version de Python utilisée.
 
